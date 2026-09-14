@@ -51,6 +51,18 @@
             <version>8.3.0</version>
         </dependency>
 
+        <!-- ===== JPA / Hibernate ORM (bài thực hành MVC + ORM) ===== -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.4.10.Final</version>
+        </dependency>
+
         <!-- Password hashing (BCrypt) phòng khi sau này bạn làm chức năng Login giống thầy -->
         <dependency>
             <groupId>org.mindrot</groupId>

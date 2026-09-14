@@ -1,0 +1,130 @@
+/* ===== Product ORM MVC - giao diện tối giản ===== */
+* { box-sizing: border-box; }
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+    color: #222;
+}
+
+.container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+.container-narrow { max-width: 760px; }
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+.page-header h1 { margin: 0; font-size: 22px; }
+
+.card {
+    background: #fff;
+    border: 1px solid #e3e6ea;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+
+fieldset {
+    border: 1px solid #e3e6ea;
+    border-radius: 6px;
+    margin: 0 0 16px;
+    padding: 14px 16px 18px;
+}
+legend { font-weight: 600; padding: 0 6px; }
+
+/* --- Filter bar --- */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e3e6ea;
+    margin-bottom: 16px;
+    align-items: center;
+}
+.filter-bar input[type="text"], .filter-bar select { padding: 7px 9px; border: 1px solid #ccd1d6; border-radius: 5px; }
+
+/* --- Form --- */
+.form-group { margin-bottom: 14px; flex: 1; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+.form-group input[type="text"], .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccd1d6;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.form-row { display: flex; gap: 14px; }
+.form-check label { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.form-actions { display: flex; gap: 10px; }
+.form-actions-inline { display: flex; gap: 8px; align-items: flex-end; }
+.required { color: #d93025; }
+
+.field-error { color: #d93025; font-size: 12.5px; display: block; margin-top: 3px; min-height: 14px; }
+
+/* --- Table --- */
+.table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; }
+.table th, .table td { border-bottom: 1px solid #e9ecef; padding: 10px 12px; text-align: left; font-size: 14px; }
+.table th { background: #f0f2f5; font-weight: 600; }
+.table tbody tr:hover { background: #fafbfc; }
+.text-right { text-align: right !important; }
+.empty-row { text-align: center; color: #8a9299; padding: 28px 0 !important; }
+
+/* --- Badge --- */
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 600; }
+.badge-active { background: #e6f4ea; color: #137333; }
+.badge-inactive { background: #fce8e6; color: #c5221f; }
+
+/* --- Buttons --- */
+.btn {
+    display: inline-block;
+    padding: 7px 14px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-size: 13.5px;
+    cursor: pointer;
+    background: none;
+}
+.btn-primary { background: #1a73e8; color: #fff; }
+.btn-primary:hover { background: #1765cc; }
+.btn-outline { border-color: #1a73e8; color: #1a73e8; background: #fff; }
+.btn-warning { background: #fbbc05; color: #333; }
+.btn-danger { background: #ea4335; color: #fff; }
+.btn-success { background: #34a853; color: #fff; }
+.btn-sm { padding: 4px 10px; font-size: 12.5px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* --- Alert --- */
+.alert { padding: 11px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 14px; }
+.alert-success { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
+.alert-error { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
+
+/* --- Pagination --- */
+.pagination { display: flex; gap: 5px; margin: 16px 0 8px; flex-wrap: wrap; }
+.page-link {
+    padding: 6px 11px;
+    border: 1px solid #d5d9dd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #1a73e8;
+    background: #fff;
+    font-size: 13.5px;
+}
+.page-link:hover { background: #f0f4ff; }
+.page-active { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+
+.muted { color: #8a9299; font-size: 13px; }
+code { background: #f0f2f5; padding: 2px 6px; border-radius: 4px; font-size: 12.5px; }
+
+/* --- Error / Home card --- */
+.error-card, .home-card { text-align: center; padding: 40px 24px; }
+.error-message { font-size: 15px; color: #c5221f; }
+.home-list { text-align: left; display: inline-block; line-height: 1.9; }
+.home-links { margin-top: 18px; display: flex; gap: 10px; justify-content: center; }

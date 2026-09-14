@@ -1,228 +1,225 @@
 package com.example.javawebmvc.controller;
 
-import com.example.javawebmvc.dao.CategoryDAO;
-import com.example.javawebmvc.dao.ProductDAO;
-import com.example.javawebmvc.model.Category;
-import com.example.javawebmvc.model.Product;
-import jakarta.servlet.ServletConfig;
+import com.example.javawebmvc.dto.PageResult;
+import com.example.javawebmvc.dto.ProductFormDTO;
+import com.example.javawebmvc.dto.ProductSearchDTO;
+import com.example.javawebmvc.entity.Category;
+import com.example.javawebmvc.entity.Product;
+import com.example.javawebmvc.exception.BusinessException;
+import com.example.javawebmvc.exception.ValidationException;
+import com.example.javawebmvc.service.CategoryService;
+import com.example.javawebmvc.service.ProductService;
+
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * CONTROLLER - Điều phối toàn bộ thao tác CRUD cho Product theo mẫu của thầy giáo.
- * Áp dụng cấu trúc Front Controller thu nhỏ, điều hướng bằng tham số "action".
- * Đã cấu hình tương thích kiểu dữ liệu Double cho Price và thuộc tính của dự án mới.
+ * CONTROLLER cho Product - chỉ điều phối HTTP, nghiệp vụ nằm ở Service.
+ *
+ * URL mapping (mục 9 của đề):
+ *   GET  /products             -> danh sách + tìm kiếm + lọc + sort + phân trang
+ *   GET  /products/create      -> hiển thị form thêm (Product + Detail cùng màn hình)
+ *   POST /products/create      -> validate + tạo Product + Detail trong 1 transaction
+ *   GET  /products/edit?id=1   -> hiển thị form sửa, load Product kèm Detail
+ *   POST /products/edit        -> validate + cập nhật Product + Detail
+ *   POST /products/delete?id=1 -> xoá mềm Product
  */
-@WebServlet(
-        name = "ProductServlet",
-        urlPatterns = {"/products"},
-        loadOnStartup = 1,
-        initParams = {
-                @WebInitParam(name = "pageTitle", value = "Quản lý sản phẩm"),
-                @WebInitParam(name = "defaultAction", value = "list")
-        }
-)
+@WebServlet(name = "ProductServlet", urlPatterns = {"/products", "/products/*"},
+        loadOnStartup = 1)
 public class ProductServlet extends HttpServlet {
 
-    private static final String VIEW_LIST = "/WEB-INF/views/product/list.jsp";
-    private static final String VIEW_FORM = "/WEB-INF/views/product/form.jsp";
-
-    /** Tài nguyên dùng chung, tạo 1 lần trong init() và dùng lại cho mọi request */
-    private ProductDAO productDAO;
-    private CategoryDAO categoryDAO;
-
-    /** Các tham số cấu hình đọc từ ServletConfig */
-    private String pageTitle;
-    private String defaultAction;
-
-    /** Bộ đếm dùng chung nhiều thread -> bắt buộc dùng loại thread-safe */
-    private final AtomicLong requestCount = new AtomicLong();
-
-    // ---------------------------------------------------------------------
-    // (1) LOAD & INSTANTIATE
-    // ---------------------------------------------------------------------
-    public ProductServlet() {
-        super();
-        System.out.println("[LIFECYCLE] ProductServlet (1) CONSTRUCTOR - instance vừa được tạo");
-    }
-
-    // ---------------------------------------------------------------------
-    // (2) INIT - Chạy ĐÚNG 1 LẦN khi deploy ứng dụng
-    // ---------------------------------------------------------------------
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        log("[LIFECYCLE] (2a) init(ServletConfig) - servlet name = " + config.getServletName());
-    }
+    private ProductService productService;
+    private CategoryService categoryService;
 
     @Override
-    public void init() throws ServletException {
-        this.productDAO = new ProductDAO();
-        this.categoryDAO = new CategoryDAO(); // Khởi tạo thêm CategoryDAO để lấy danh mục cho Form
-        this.pageTitle = getInitParameter("pageTitle");
-        this.defaultAction = getInitParameter("defaultAction");
-
-        // Cấp phạm vi TOÁN ỨNG DỤNG (ServletContext) để hiển thị tiêu đề trang
-        getServletContext().setAttribute("appPageTitle", pageTitle);
-
-        log("[LIFECYCLE] (2b) init() - Đã tạo DAO thành công | pageTitle = " + pageTitle);
+    public void init() {
+        productService = new ProductService();
+        categoryService = new CategoryService();
     }
 
-    // ---------------------------------------------------------------------
-    // (3) SERVICE - Chạy cho MỖI request, điều phối đa luồng (Multi-thread)
-    // ---------------------------------------------------------------------
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        long n = requestCount.incrementAndGet();
-        log("[LIFECYCLE] (3) service() - " + req.getMethod() + " " + req.getRequestURI()
-                + " | request thứ " + n + " | thread = " + Thread.currentThread().getName());
-        super.service(req, resp);
-    }
-
+    // ------------------------------------------------------------------
+    // GET: list / create-form / edit-form
+    // ------------------------------------------------------------------
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String action = req.getParameter("action");
-        if (action == null) {
-            action = defaultAction;
-        }
-        log("[LIFECYCLE] (3a) doGet() - action = " + action);
 
-        try {
-            switch (action) {
-                case "new":
-                    showForm(req, resp, null);
-                    break;
-                case "edit":
-                    int idToEdit = parseId(req);
-                    Product existingProduct = productDAO.findById(idToEdit); // Cần đảm bảo ProductDAO đã viết hàm findById
-                    showForm(req, resp, existingProduct);
-                    break;
-                case "delete":
-                    productDAO.delete(parseId(req));
-                    req.getSession().setAttribute("message", "Đã xóa sản phẩm thành công.");
-                    resp.sendRedirect(req.getContextPath() + "/products");
-                    break;
-                case "list":
-                default:
-                    listProducts(req, resp);
-                    break;
-            }
-        } catch (Exception e) {
-            req.setAttribute("error", "Đã xảy ra lỗi hệ thống: " + e.getMessage());
-            req.getRequestDispatcher(VIEW_LIST).forward(req, resp);
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        String action = req.getParameter("action");
-        if (action == null) {
-            action = "";
-        }
-        log("[LIFECYCLE] (3b) doPost() - action = " + action);
+        String extra = req.getPathInfo(); // null | /create | /edit
 
         try {
-            switch (action) {
-                case "insert":
-                    Product newProduct = buildProductFromRequest(req, false);
-                    productDAO.insert(newProduct);
-                    req.getSession().setAttribute("message", "Thêm sản phẩm thành công.");
-                    resp.sendRedirect(req.getContextPath() + "/products");
-                    break;
-                case "update":
-                    Product updateProduct = buildProductFromRequest(req, true);
-                    productDAO.update(updateProduct); // Cần đảm bảo ProductDAO đã viết hàm update
-                    req.getSession().setAttribute("message", "Cập nhật sản phẩm thành công.");
-                    resp.sendRedirect(req.getContextPath() + "/products");
-                    break;
-                default:
-                    resp.sendRedirect(req.getContextPath() + "/products");
-                    break;
+            if ("/create".equals(extra)) {
+                showCreateForm(req, resp);
+            } else if ("/edit".equals(extra)) {
+                showEditForm(req, resp);
+            } else {
+                listProducts(req, resp);
             }
+        } catch (BusinessException e) {
+            showError(req, resp, e.getMessage());
         } catch (Exception e) {
-            req.setAttribute("error", "Lỗi xử lý dữ liệu form: " + e.getMessage());
-            showForm(req, resp, buildProductFromRequest(req, "update".equals(action)));
+            throw new ServletException("Lỗi hệ thống: " + e.getMessage(), e);
         }
-    }
-
-    // ---------------------------------------------------------------------
-    // CÁC HÀM DIEU PHỐI BỔ TRỢ (HELPER METHODS)
-    // ---------------------------------------------------------------------
-
-    private void showForm(HttpServletRequest req, HttpServletResponse resp, Product product)
-            throws ServletException, IOException {
-        req.setAttribute("product", product);
-
-        // Đọc thêm danh sách danh mục để đổ vào ô <select> combobox trên Form
-        List<Category> listCategories = categoryDAO.findAll();
-        req.setAttribute("listCategories", listCategories);
-
-        req.getRequestDispatcher(VIEW_FORM).forward(req, resp);
     }
 
     private void listProducts(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<Product> list = productDAO.findAll();
-        req.setAttribute("listProducts", list);
-        req.getRequestDispatcher(VIEW_LIST).forward(req, resp);
+        ProductSearchDTO criteria = new ProductSearchDTO();
+        criteria.setKeyword(req.getParameter("keyword"));
+        criteria.setCategoryId(parseLong(req.getParameter("categoryId")));
+        criteria.setStatus(req.getParameter("status"));
+        criteria.setMinPrice(parseDecimal(req.getParameter("minPrice")));
+        criteria.setMaxPrice(parseDecimal(req.getParameter("maxPrice")));
+        criteria.setSortBy(req.getParameter("sortBy"));
+        criteria.setSortDir(req.getParameter("sortDir"));
+        Long pageParam = parseLong(req.getParameter("page"));
+        Long sizeParam = parseLong(req.getParameter("size"));
+        criteria.setPage(pageParam == null ? 1 : pageParam.intValue());
+        criteria.setSize(sizeParam == null ? 5 : sizeParam.intValue());
+        criteria.normalize();
+
+        PageResult<Product> pageData = productService.search(criteria);
+        List<Category> categories = categoryService.listActive();
+
+        req.setAttribute("pageData", pageData);
+        req.setAttribute("criteria", criteria);
+        req.setAttribute("listCategories", categories);
+
+        req.getRequestDispatcher("/WEB-INF/views/product-list.jsp").forward(req, resp);
     }
 
-    private int parseId(HttpServletRequest req) {
-        String idStr = req.getParameter("id");
-        if (idStr == null || idStr.trim().isEmpty()) {
-            throw new IllegalArgumentException("ID sản phẩm không hợp lệ.");
+    private void showCreateForm(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        req.setAttribute("listCategories", categoryService.listActive());
+        req.setAttribute("form", new ProductFormDTO());
+        req.getRequestDispatcher("/WEB-INF/views/product-form.jsp").forward(req, resp);
+    }
+
+    private void showEditForm(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        Long id = parseLong(req.getParameter("id"));
+        if (id == null) {
+            throw new BusinessException("Thiếu id sản phẩm cần sửa.");
         }
-        return Integer.parseInt(idStr.trim());
-    }
+        Product product = productService.getWithDetail(id)
+                .orElseThrow(() -> new BusinessException(
+                        "Sản phẩm không tồn tại hoặc đã bị xoá (id=" + id + ")."));
 
-    private Product buildProductFromRequest(HttpServletRequest req, boolean isUpdate) {
-        Product p = new Product();
+        ProductFormDTO form = new ProductFormDTO();
+        form.setId(product.getId());
+        form.setSku(product.getSku());
+        form.setName(product.getName());
+        form.setPrice(product.getPrice() != null ? product.getPrice().toPlainString() : "");
+        form.setQuantity(product.getQuantity() != null ? String.valueOf(product.getQuantity()) : "");
+        form.setStatus(String.valueOf(product.isStatus()));
+        form.setCategoryId(product.getCategory() != null ? product.getCategory().getId() : null);
 
-        if (isUpdate) {
-            p.setId(parseId(req));
-            String statusStr = req.getParameter("status");
-            p.setStatus(statusStr != null && Boolean.parseBoolean(statusStr));
-        } else {
-            p.setId(0);
-            p.setStatus(true); // Tạo mới mặc định hoạt động
+        if (product.getDetail() != null) {
+            form.setManufacturer(product.getDetail().getManufacturer());
+            form.setWarrantyMonths(product.getDetail().getWarrantyMonths() != null
+                    ? String.valueOf(product.getDetail().getWarrantyMonths()) : "0");
+            form.setOrigin(product.getDetail().getOrigin());
+            form.setDetailDescription(product.getDetail().getDescription());
+            form.setTechnicalSpec(product.getDetail().getTechnicalSpec());
+            form.setDetailId(product.getDetail().getId());
         }
 
-        p.setName(req.getParameter("name"));
-
-        // Đổi từ cấu trúc BigDecimal cũ của thầy sang kiểu double của bạn
-        String priceStr = req.getParameter("price");
-        p.setPrice(priceStr != null && !priceStr.isEmpty() ? Double.parseDouble(priceStr) : 0.0);
-
-        String quantityStr = req.getParameter("quantity");
-        p.setQuantity(quantityStr != null && !quantityStr.isEmpty() ? Integer.parseInt(quantityStr) : 0);
-
-        String categoryIdStr = req.getParameter("categoryId");
-        p.setCategoryId(categoryIdStr != null && !categoryIdStr.isEmpty() ? Integer.parseInt(categoryIdStr) : 0);
-
-        p.setDeleted(false); // Mặc định chưa bị xóa mềm
-
-        return p;
+        req.setAttribute("form", form);
+        req.setAttribute("listCategories", categoryService.listActive());
+        req.getRequestDispatcher("/WEB-INF/views/product-form.jsp").forward(req, resp);
     }
 
-    // ---------------------------------------------------------------------
-    // (4) DESTROY - Chạy 1 lần duy nhất khi tắt Server Tomcat
-    // ---------------------------------------------------------------------
+    // ------------------------------------------------------------------
+    // POST: create / edit / delete
+    // ------------------------------------------------------------------
     @Override
-    public void destroy() {
-        log("[LIFECYCLE] (4) destroy() - Giải phóng tài nguyên ProductServlet hoàn tất");
-        super.destroy();
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.setCharacterEncoding("UTF-8");
+        String extra = req.getPathInfo();
+        String action = req.getParameter("action"); // dự phòng cho form dùng query action=
+
+        try {
+            if ("/create".equals(extra) || "create".equals(action)) {
+                create(req, resp);
+            } else if ("/edit".equals(extra) || "edit".equals(action)) {
+                update(req, resp);
+            } else if ("/delete".equals(extra) || "delete".equals(action)) {
+                delete(req, resp);
+            } else {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (ValidationException e) {
+            // Validate lỗi: forward ngược form, giữ dữ liệu đã nhập + map lỗi theo từng trường.
+            req.setAttribute("form", ProductFormDTO.fromRequest(req));
+            req.setAttribute("errors", e.getErrors());
+            req.setAttribute("listCategories", categoryService.listActive());
+            req.getRequestDispatcher("/WEB-INF/views/product-form.jsp").forward(req, resp);
+        } catch (BusinessException e) {
+            req.setAttribute("form", ProductFormDTO.fromRequest(req));
+            req.setAttribute("error", e.getMessage());
+            req.setAttribute("listCategories", categoryService.listActive());
+            req.getRequestDispatcher("/WEB-INF/views/product-form.jsp").forward(req, resp);
+        } catch (Exception e) {
+            throw new ServletException("Lỗi hệ thống: " + e.getMessage(), e);
+        }
+    }
+
+    private void create(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ProductFormDTO form = ProductFormDTO.fromRequest(req);
+        Product product = productService.create(form);
+        req.getSession().setAttribute("flash",
+                "Tạo sản phẩm thành công. SKU: " + product.getSku());
+        resp.sendRedirect(req.getContextPath() + "/products");
+    }
+
+    private void update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ProductFormDTO form = ProductFormDTO.fromRequest(req);
+        productService.update(form);
+        req.getSession().setAttribute("flash", "Cập nhật sản phẩm thành công.");
+        resp.sendRedirect(req.getContextPath() + "/products");
+    }
+
+    private void delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Long id = parseLong(req.getParameter("id"));
+        if (id == null) {
+            throw new BusinessException("Thiếu id sản phẩm cần xoá.");
+        }
+        productService.softDelete(id);
+        req.getSession().setAttribute("flash", "Đã xoá mềm sản phẩm (id=" + id + ").");
+        resp.sendRedirect(req.getContextPath() + "/products");
+    }
+
+    private void showError(HttpServletRequest req, HttpServletResponse resp, String message)
+            throws ServletException, IOException {
+        req.setAttribute("errorTitle", "Có lỗi xảy ra");
+        req.setAttribute("errorMessage", message);
+        req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
+    }
+
+    private Long parseLong(String raw) {
+        try {
+            return (raw == null || raw.isBlank()) ? null : Long.valueOf(raw.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private BigDecimal parseDecimal(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        try {
+            return new BigDecimal(raw.replace(',', '.'));
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
-
