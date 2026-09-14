@@ -1,0 +1,130 @@
+09-Sep-2026 18:52:40.015 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: contextInitialized()
+09-Sep-2026 18:52:40.016 INFO [main] org.apache.catalina.core.ApplicationContext.log SessionListener: contextInitialized()
+09-Sep-2026 18:52:40.032 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: attributeAdded('StockTicker', 'async.Stockticker@42c28305')
+09-Sep-2026 18:56:20.643 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: contextInitialized()
+09-Sep-2026 18:56:20.643 INFO [main] org.apache.catalina.core.ApplicationContext.log SessionListener: contextInitialized()
+09-Sep-2026 18:56:20.650 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: attributeAdded('StockTicker', 'async.Stockticker@e9dc4d0')
+09-Sep-2026 18:56:44.819 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2b) init() - da tao UserDAO, sessionTimeout = 30 phut, context = /JavaBean
+09-Sep-2026 18:56:44.819 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2a) init(ServletConfig) - servlet name = LoginServlet
+09-Sep-2026 18:56:44.825 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - GET /JavaBean/login | request thu 1 | thread = http-nio-8080-exec-1
+09-Sep-2026 18:56:44.825 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3a) doGet() - hien thi form dang nhap
+09-Sep-2026 18:56:54.145 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 2 | thread = http-nio-8080-exec-2
+09-Sep-2026 18:56:54.146 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 18:56:55.014 SEVERE [http-nio-8080-exec-2] org.apache.catalina.core.StandardWrapperValve.invoke Servlet.service() for servlet [LoginServlet] in context with path [/JavaBean] threw exception
+	java.lang.RuntimeException: Loi truy van user: Unknown column 'full_name' in 'field list'
+		at dao.UserDao.findByUsername(UserDao.java:30)
+		at controller.LoginServlet.doPost(LoginServlet.java:137)
+		at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+		at controller.LoginServlet.service(LoginServlet.java:114)
+		at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:197)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:142)
+		at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:57)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:166)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:142)
+		at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+		at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88)
+		at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)
+		at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+		at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)
+		at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:782)
+		at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)
+		at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:348)
+		at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:410)
+		at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)
+		at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)
+		at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2197)
+		at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:976)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:494)
+		at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:80)
+		at java.base/java.lang.Thread.run(Thread.java:1474)
+	Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'full_name' in 'field list'
+		at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+		at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:113)
+		at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:938)
+		at com.mysql.cj.jdbc.ClientPreparedStatement.executeQuery(ClientPreparedStatement.java:1004)
+		at dao.UserDao.findByUsername(UserDao.java:24)
+		... 26 more
+09-Sep-2026 18:58:58.970 INFO [http-nio-8080-exec-4] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 3 | thread = http-nio-8080-exec-4
+09-Sep-2026 18:58:58.972 INFO [http-nio-8080-exec-4] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 18:59:57.696 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: contextInitialized()
+09-Sep-2026 18:59:57.696 INFO [main] org.apache.catalina.core.ApplicationContext.log SessionListener: contextInitialized()
+09-Sep-2026 18:59:57.704 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: attributeAdded('StockTicker', 'async.Stockticker@319c3a25')
+09-Sep-2026 19:00:01.148 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2b) init() - da tao UserDAO, sessionTimeout = 30 phut, context = /JavaBean
+09-Sep-2026 19:00:01.148 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2a) init(ServletConfig) - servlet name = LoginServlet
+09-Sep-2026 19:00:01.154 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - GET /JavaBean/login | request thu 1 | thread = http-nio-8080-exec-2
+09-Sep-2026 19:00:01.154 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3a) doGet() - hien thi form dang nhap
+09-Sep-2026 19:00:07.221 INFO [http-nio-8080-exec-3] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 2 | thread = http-nio-8080-exec-3
+09-Sep-2026 19:00:07.221 INFO [http-nio-8080-exec-3] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:00:19.376 INFO [http-nio-8080-exec-6] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 3 | thread = http-nio-8080-exec-6
+09-Sep-2026 19:00:19.377 INFO [http-nio-8080-exec-6] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:00:57.827 INFO [http-nio-8080-exec-5] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 4 | thread = http-nio-8080-exec-5
+09-Sep-2026 19:00:57.827 INFO [http-nio-8080-exec-5] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:02:59.593 INFO [http-nio-8080-exec-7] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 5 | thread = http-nio-8080-exec-7
+09-Sep-2026 19:02:59.593 INFO [http-nio-8080-exec-7] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:03:03.708 INFO [http-nio-8080-exec-10] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 6 | thread = http-nio-8080-exec-10
+09-Sep-2026 19:03:03.708 INFO [http-nio-8080-exec-10] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:03:08.633 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 7 | thread = http-nio-8080-exec-2
+09-Sep-2026 19:03:08.633 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:03:53.523 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: contextInitialized()
+09-Sep-2026 19:03:53.523 INFO [main] org.apache.catalina.core.ApplicationContext.log SessionListener: contextInitialized()
+09-Sep-2026 19:03:53.529 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: attributeAdded('StockTicker', 'async.Stockticker@319c3a25')
+09-Sep-2026 19:04:11.035 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2b) init() - da tao UserDAO, sessionTimeout = 30 phut, context = /JavaBean
+09-Sep-2026 19:04:11.035 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2a) init(ServletConfig) - servlet name = LoginServlet
+09-Sep-2026 19:04:11.040 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 1 | thread = http-nio-8080-exec-1
+09-Sep-2026 19:04:11.040 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:04:48.507 INFO [http-nio-8080-exec-4] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 2 | thread = http-nio-8080-exec-4
+09-Sep-2026 19:04:48.508 INFO [http-nio-8080-exec-4] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:18:48.087 INFO [http-nio-8080-exec-7] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - GET /JavaBean/login | request thu 3 | thread = http-nio-8080-exec-7
+09-Sep-2026 19:18:48.097 INFO [http-nio-8080-exec-7] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3a) doGet() - hien thi form dang nhap
+09-Sep-2026 19:22:12.051 INFO [http-nio-8080-exec-9] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 4 | thread = http-nio-8080-exec-9
+09-Sep-2026 19:22:12.053 INFO [http-nio-8080-exec-9] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:23:23.199 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 5 | thread = http-nio-8080-exec-1
+09-Sep-2026 19:23:23.199 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:23:38.200 INFO [http-nio-8080-exec-3] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 6 | thread = http-nio-8080-exec-3
+09-Sep-2026 19:23:38.201 INFO [http-nio-8080-exec-3] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:23:38.370 SEVERE [http-nio-8080-exec-3] org.apache.catalina.core.StandardWrapperValve.invoke Servlet.service() for servlet [controller.ProductServlet] in context with path [/JavaBean] threw exception
+	java.lang.NullPointerException: Cannot invoke "String.toCharArray()" because "val" is null
+		at java.base/java.math.BigDecimal.<init>(BigDecimal.java:923)
+		at controller.ProductServlet.doPost(ProductServlet.java:51)
+		at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+		at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:197)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:142)
+		at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:57)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:166)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:142)
+		at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+		at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88)
+		at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)
+		at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+		at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)
+		at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:782)
+		at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)
+		at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:348)
+		at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:410)
+		at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)
+		at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)
+		at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2197)
+		at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:976)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:494)
+		at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:80)
+		at java.base/java.lang.Thread.run(Thread.java:1474)
+09-Sep-2026 19:24:01.661 INFO [http-nio-8080-exec-4] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 7 | thread = http-nio-8080-exec-4
+09-Sep-2026 19:24:01.677 INFO [http-nio-8080-exec-4] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 19:25:27.237 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: contextInitialized()
+09-Sep-2026 19:25:27.238 INFO [main] org.apache.catalina.core.ApplicationContext.log SessionListener: contextInitialized()
+09-Sep-2026 19:25:27.243 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: attributeAdded('StockTicker', 'async.Stockticker@2e060819')
+09-Sep-2026 19:25:31.897 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2b) init() - da tao UserDAO, sessionTimeout = 30 phut, context = /JavaBean
+09-Sep-2026 19:25:31.897 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (2a) init(ServletConfig) - servlet name = LoginServlet
+09-Sep-2026 19:25:31.905 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - GET /JavaBean/login | request thu 1 | thread = http-nio-8080-exec-1
+09-Sep-2026 19:25:31.905 INFO [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3a) doGet() - hien thi form dang nhap
+09-Sep-2026 19:25:42.593 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3) service() - POST /JavaBean/login | request thu 2 | thread = http-nio-8080-exec-2
+09-Sep-2026 19:25:42.593 INFO [http-nio-8080-exec-2] org.apache.catalina.core.ApplicationContext.log LoginServlet: [LIFECYCLE] (3b) doPost() - kiem tra thong tin dang nhap
+09-Sep-2026 20:21:17.411 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: contextInitialized()
+09-Sep-2026 20:21:17.412 INFO [main] org.apache.catalina.core.ApplicationContext.log SessionListener: contextInitialized()
+09-Sep-2026 20:21:17.417 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: attributeAdded('StockTicker', 'async.Stockticker@2dd8239')
+09-Sep-2026 20:21:17.836 INFO [main] org.apache.catalina.core.ApplicationContext.log SessionListener: contextDestroyed()
+09-Sep-2026 20:21:17.839 INFO [main] org.apache.catalina.core.ApplicationContext.log ContextListener: contextDestroyed()

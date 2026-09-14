@@ -1,0 +1,10 @@
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:20:33:31 +0700] "GET /JavaBean/products HTTP/1.1" 404 773
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:20:33:56 +0700] "GET /JavaBean_war_exploded/products HTTP/1.1" 404 786
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:20:33:57 +0700] "GET /favicon.ico HTTP/1.1" 200 21630
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:20:34:11 +0700] "GET /JavaBean/products HTTP/1.1" 404 773
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:20:35:29 +0700] "GET /JavaBean/login HTTP/1.1" 404 770
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:23:30:16 +0700] "GET /JavaBean/login HTTP/1.1" 404 770
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:23:30:21 +0700] "GET /JavaBean/login HTTP/1.1" 404 770
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:23:35:17 +0700] "GET /JavaBean/login HTTP/1.1" 404 770
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:23:37:53 +0700] "GET /JavaBean/index.jsp HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [14/Sep/2026:23:37:53 +0700] "GET /JavaBean/products HTTP/1.1" 404 773

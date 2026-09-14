@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  persistence.xml - File cấu hình JPA/Hibernate
+  Đường dẫn: src/main/resources/META-INF/persistence.xml
+  
+  Tác dụng:
+  - Định nghĩa persistence-unit (cấu hình kết nối database, entities, dialect, v.v.)
+  - Hibernate sẽ đọc file này để khởi tạo EntityManagerFactory
+-->
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+             https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <!--
+      persistence-unit: Đơn vị quản lý - định nghĩa cấu hình cho một database cụ thể
+      name="product_orm_mvc": Tên của persistence-unit (được gọi trong JPAUtil.getEntityManager())
+    -->
+    <persistence-unit name="product_orm_mvc">
+        
+        <!-- 
+          provider: Chỉ định triển khai JPA (Hibernate)
+          org.hibernate.jpa.HibernateJpaProvider là Hibernate provider
+        -->
+        <provider>org.hibernate.jpa.HibernateJpaProvider</provider>
+
+        <!--
+          class: Liệt kê các Entity classes để Hibernate quản lý
+          Nếu không khai báo, Hibernate không biết class nào là entity
+        -->
+        <class>entity.Category</class>
+        <class>entity.Product</class>
+        <class>entity.ProductDetail</class>
+        <class>entity.User</class>
+
+        <properties>
+            <!--
+              ===== DATABASE CONNECTION PROPERTIES =====
+              Thay đổi các giá trị phù hợp với cấu hình database của bạn
+            -->
+            
+            <!-- Driver class: MySQL Connector Driver -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            
+            <!-- Database URL: kết nối đến database "product_orm_mvc_db" -->
+            <property name="jakarta.persistence.jdbc.url" 
+                      value="jdbc:mysql://localhost:3306/product_orm_mvc_db?useSSL=false&amp;serverTimezone=UTC&amp;characterEncoding=UTF-8"/>
+            
+            <!-- Username: đăng nhập database -->
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            
+            <!-- Password: mật khẩu database -->
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
+            <!--
+              ===== HIBERNATE DIALECT =====
+              Dialect: "Phương ngôn" SQL cho từng database
+              MySQL8Dialect cho MySQL 8.0+
+              Hibernate sẽ dùng dialect này để sinh ra SQL phù hợp
+            -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+
+            <!--
+              ===== SCHEMA GENERATION =====
+              hbm2ddl.auto: Hibernate tự động tạo/cập nhật bảng từ entities
+              - create: Xóa bảng cũ, tạo mới (chỉ dùng lúc phát triển)
+              - update: Thêm cột mới, không xóa cột cũ (an toàn hơn)
+              - validate: Chỉ kiểm tra, không thay đổi
+              - none: Không làm gì
+            -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!--
+              ===== LOGGING =====
+              show_sql: In ra SQL statements để debug
+              true: Hiển thị toàn bộ SQL query được chạy
+              false: Không hiển thị (tắt để tăng hiệu năng)
+            -->
+            <property name="hibernate.show_sql" value="true"/>
+            
+            <!-- format_sql: Format SQL output để dễ đọc -->
+            <property name="hibernate.format_sql" value="true"/>
+            
+            <!-- use_sql_comments: Thêm comment giải thích vào SQL -->
+            <property name="hibernate.use_sql_comments" value="true"/>
+
+            <!--
+              ===== CONNECTION POOL =====
+              Cấu hình connection pool (số lượng kết nối database tối đa)
+            -->
+            <property name="hibernate.hikari.maximum_pool_size" value="20"/>
+            <property name="hibernate.hikari.minimum_idle" value="5"/>
+
+            <!--
+              ===== TRANSACTION =====
+              Cấu hình transaction handling
+            -->
+            <property name="jakarta.persistence.transaction_type" value="RESOURCE_LOCAL"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
